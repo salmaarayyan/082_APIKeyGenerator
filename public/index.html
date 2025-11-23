@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create API Key — Demo</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#6ee7b7;
+      --muted:#94a3b8;
+      --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      --transition:300ms cubic-bezier(.22,.9,.3,1);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#071021 0%, #071A2A 100%);
+      color:#e6eef6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .card{
+      width:100%;
+      max-width:720px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:0 8px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      backdrop-filter: blur(8px) saturate(1.05);
+      transform-origin:center;
+      animation: pop 420ms var(--transition) both;
+    }
+    @keyframes pop{from{transform:translateY(10px) scale(.995);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+
+    .header{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .logo{
+      width:56px;height:56px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),#60a5fa);
+      display:flex;align-items:center;justify-content:center;
+      color:#012;font-weight:700;font-size:18px;
+      box-shadow:0 6px 18px rgba(99,102,241,0.12);
+    }
+    h1{margin:0;font-size:18px}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .form-row{
+      display:grid;
+      grid-template-columns:1fr 160px;
+      gap:12px;
+      align-items:center;
+    }
+
+    @media (max-width:540px){
+      .form-row{grid-template-columns:1fr;}
+    }
+
+    input[type="text"]{
+      width:100%;
+      padding:14px 16px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.03);
+      background:var(--glass);
+      color:inherit;
+      font-size:15px;
+      outline:none;
+      transition:box-shadow var(--transition), transform var(--transition);
+      box-shadow: 0 4px 18px rgba(2,6,23,0.45);
+    }
+    input[type="text"]:focus{
+      box-shadow:0 8px 30px rgba(99,102,241,0.12), 0 0 0 6px rgba(110,231,183,0.06);
+      transform:translateY(-2px);
+      border-color: rgba(110,231,183,0.16);
+    }
+
+    .btn{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 16px;
+      border-radius:10px;
+      border:0;
+      background:linear-gradient(90deg,#4f46e5,#06b6d4);
+      color:white;
+      font-weight:600;
+      cursor:pointer;
+      user-select:none;
+      overflow:hidden;
+      transition:transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow var(--transition);
+    }
+    .btn:active{transform:translateY(1px) scale(.998)}
+    .btn:hover{box-shadow:0 10px 30px rgba(6,182,212,0.12)}
+
+    .btn .ripple{
+      position:absolute;border-radius:999px;
+      transform:scale(0);opacity:0.45;
+      pointer-events:none
+    }
+
+    .note{
+      margin-top:14px;color:var(--muted);font-size:13px
+    }
+
+    .result{
+      margin-top:18px;
+      padding:12px 14px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      border:1px solid rgba(255,255,255,0.02);
+      transform-origin:center;
+      opacity:0;
+      transform:translateY(6px) scale(.996);
+      transition:opacity 360ms ease, transform 360ms ease;
+    }
+    .result.show{opacity:1;transform:none}
+    .key{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;font-size:13px;letter-spacing:0.6px;color:#dffaf0}
+    .copy{
+      border:0;background:transparent;color:var(--accent);
+      font-weight:700;cursor:pointer;padding:8px 10px;
+      border-radius:8px;transition:background var(--transition);
+    }
+    .copy:hover{background:rgba(110,231,183,0.06)}
+
+    .small{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <div class="header">
+      <div class="logo">API</div>
+      <div>
+        <h1>Buat API Key</h1>
+        <p class="lead">Masukkan nama (opsional) lalu tekan <strong>Create API Key</strong>.</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <div class="form-row">
+        <input id="name" type="text" placeholder="Nama (opsional)" />
+        <button id="createBtn" class="btn" type="button">
+          <span>Create API Key</span>
+          <span class="ripple" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+
+    <p class="note">API key akan dihasilkan oleh server. Simpan baik-baik — ini hanya ditampilkan sekali.</p>
+
+    <div id="result" class="result" role="status" aria-hidden="true">
+      <div>
+        <div class="small">API Key</div>
+        <div id="key" class="key">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+        <button id="copyBtn" class="copy" aria-label="Salin API key">Copy</button>
+        <div id="feedback" class="small" aria-live="polite"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const btn = document.getElementById('createBtn');
+    const rippleEl = btn.querySelector('.ripple');
+    const nameInput = document.getElementById('name');
+    const result = document.getElementById('result');
+    const keyEl = document.getElementById('key');
+    const copyBtn = document.getElementById('copyBtn');
+    const feedback = document.getElementById('feedback');
+
+    // Ripple animation + fetch to backend
+    btn.addEventListener('click', async (e) => {
+      // Ripple effect
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 1.2;
+      rippleEl.style.width = rippleEl.style.height = size + 'px';
+      rippleEl.style.left = (e.clientX - rect.left - size/2) + 'px';
+      rippleEl.style.top = (e.clientY - rect.top - size/2) + 'px';
+      rippleEl.style.transform = 'scale(0)';
+      rippleEl.style.opacity = '0.35';
+      rippleEl.style.transition = 'transform 520ms cubic-bezier(.2,.9,.3,1), opacity 520ms ease';
+      requestAnimationFrame(() => {
+        rippleEl.style.transform = 'scale(1)';
+        rippleEl.style.opacity = '0';
+      });
+
+      // Kirim POST request ke server
+      const name = nameInput.value.trim();
+      try {
+        const res = await fetch('/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+
+        const data = await res.json();
+        keyEl.textContent = data.apiKey;
+        result.classList.add('show');
+        result.setAttribute('aria-hidden', 'false');
+        feedback.textContent = 'API key generated';
+        navigator.clipboard.writeText(data.apiKey).then(() => {
+          feedback.textContent = 'Copied to clipboard';
+          setTimeout(() => feedback.textContent = '', 2500);
+        });
+      } catch (err) {
+        feedback.textContent = 'Error creating key';
+        console.error(err);
+      }
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const text = keyEl.textContent;
+      if (!text || text === '—') return;
+      navigator.clipboard.writeText(text).then(() => {
+        feedback.textContent = 'Copied!';
+        setTimeout(() => feedback.textContent = '', 1800);
+      }).catch(() => {
+        feedback.textContent = 'Unable to copy';
+        setTimeout(() => feedback.textContent = '', 1800);
+      });
+    });
+
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  </script>
+</body>
+</html>
