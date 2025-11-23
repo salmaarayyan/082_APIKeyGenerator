@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">API Key Generator</div>
+    <nav>
+      <a class="btn-outline" href="index.html">Back</a>
+    </nav>
+  </header>
+
+  <main class="container small">
+    <section class="card">
+      <h2>Admin Login</h2>
+      <div class="form-row">
+        <label>Email</label>
+        <input id="admin_email" type="email" />
+      </div>
+      <div class="form-row">
+        <label>Password</label>
+        <input id="admin_password" type="password" />
+      </div>
+      <div class="actions">
+        <button id="admin_login" class="btn primary">Login</button>
+        <button id="to_dashboard" class="btn ghost" style="display:none">Dashboard</button>
+      </div>
+      <div class="form-row small">
+        <span id="admin_msg" class="msg"></span>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
